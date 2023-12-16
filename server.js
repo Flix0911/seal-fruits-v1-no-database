@@ -74,6 +74,39 @@ app.post("/fruits", (req, res) => {
     res.redirect("/fruits")
 })
 
+//EDIT route - render a form to edit a specific fruit
+//GET to /fruits/:id/edit
+//render a form with the existing values filled in
+app.get("/fruits/:id/edit", (req, res) => {
+    //get the id from params
+    const id = req.params.id
+    //get the fruit being updated
+    const fruit = fruits[id]
+    //send the id and fruit over to the template
+    //edit.ejs -> ./views/edit.ejs
+    res.render("edit.ejs", {fruit, id})
+})
+
+//UPDATE route - receive the form data, updates the fruit
+//PUT to /fruits/:id
+//update the specified fruit, then redirect to index
+app.put("/fruits/:id", (req, res) => {
+    //get the id
+    const id = req.params.id
+    //get the body
+    const body = req.body
+    //convert readyToEat to true or false
+    if(body.readyToEat === "on"){
+        body.readyToEat = true
+    } else {
+        body.readyToEat = false
+    }
+    //swap the old version of fruit with the new version
+    fruits[id] = body
+    //redirect back to index page
+    res.redirect("/fruits")
+})
+
 //destory route - deletes a fruit
 //delete -> /fruits/:id
 //deletes the specified fruit, redirects to index
@@ -86,6 +119,8 @@ app.delete("/fruits/:id", (req, res) => {
     //redirect back to index
     res.redirect("/fruits")
 })
+
+
 
 // fruits show route
 // get request to /fruits/:id
@@ -102,7 +137,7 @@ app.get("/fruits/:id", (req, res) => {
     // res.render(template, data)
     // for the template assume "/views/"
     // "show.ejs" =>  ./views/show.ejs
-    res.render("show.ejs", {fruit})
+    res.render("show.ejs", {fruit, id})
     // {fruit} is the same as {fruit:fruit}
 })
 
